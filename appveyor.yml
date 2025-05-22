@@ -1,0 +1,28 @@
+version: 1.0.0 
+image: ubuntu-22.04 
+branches:
+  only:
+    - main
+
+install:
+  - yarn install
+
+build_script:
+  - yarn build
+
+deploy_script:
+  - yarn deploy
+
+after_test:
+  - echo "Tests completed"
+
+artifacts:
+  - path: ./dist
+    name: public_html 
+
+deploy:
+  provider: GitHubPages
+  repository: Elizabess27/trello-add
+  branch: gh-pages
+  folder: ./dist
+  message: "Deployment from Appveyor build $APPVEYOR_BUILD_NUMBER"

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task Board</title>
+  <link rel="stylesheet" href="./css/styles.css">
+</head>
+<body>
+  <div class="task-board">
+    <div class="column todo">
+      <h2>To Do</h2>
+      <ul id="to-do-list" class="list-group"></ul>
+      <button class="add-btn" onclick="addCard('to-do-list')">Add Another Card</button>
+    </div>
+    <div class="column progress">
+      <h2>In Progress</h2>
+      <ul id="in-progress-list" class="list-group"></ul>
+      <button class="add-btn" onclick="addCard('in-progress-list')">Add Another Card</button>
+    </div>
+    <div class="column done">
+      <h2>Done</h2>
+      <ul id="done-list" class="list-group"></ul>
+      <button class="add-btn" onclick="addCard('done-list')">Add Another Card</button>
+    </div>
+  </div>
+  <script src="./js/main.js"></script>
+</body>
+</html>
