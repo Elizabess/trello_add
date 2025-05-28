@@ -7,6 +7,7 @@
   "dependencies": {
     "@babel/core": "^7.27.1",
     "@babel/preset-env": "^7.27.2",
+    "axios": "^0.21.1",
     "babel-loader": "^10.0.0",
     "css-loader": "^7.1.2",
     "file-loader": "^6.2.0",
@@ -18,12 +19,14 @@
     "style-loader": "^4.0.0",
     "webpack": "^5.99.9",
     "webpack-cli": "^6.0.1",
-    "webpack-dev-server": "^5.2.1",
-    "axios": "^0.21.1" 
+    "webpack-dev-server": "^5.2.1"
   },
   "scripts": {
     "start": "webpack serve --mode development --open",
     "build": "webpack --mode production",
     "deploy": "gh-pages -d dist"
+  },
+  "devDependencies": {
+    "@babel/preset-react": "^7.27.1"
   }
 }
