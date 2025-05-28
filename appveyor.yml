@@ -22,7 +22,7 @@ artifacts:
 
 deploy:
   provider: GitHubPages
-  repository: Elizabess27/trello-add
+  repository: Elizabess/trello-add
   branch: gh-pages
   folder: ./dist
   message: "Deployment from Appveyor build $APPVEYOR_BUILD_NUMBER"
