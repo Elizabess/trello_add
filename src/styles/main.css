@@ -3,43 +3,43 @@
     justify-content: center;
     padding: 20px;
     background-color: #f4f5f7;
-    }
-    
-    .board {
+}
+
+.board {
     display: flex;
     gap: 20px;
     width: 100%;
     max-width: 960px;
-    }
-    
-    .column {
+}
+
+.column {
     background-color: #ebecf0;
     border-radius: 3px;
     padding: 10px;
     width: 300px;
     min-height: 100px;
-    }
-    
-    .column-title {
+}
+
+.column-title {
     font-size: 1rem;
     font-weight: bold;
     margin-bottom: 10px;
-    }
-    
-    .card {
+}
+
+.card {
     background-color: white;
     border-radius: 3px;
     padding: 10px;
     margin-bottom: 10px;
     box-shadow: 0 1px 0 rgba(9, 30, 66, 0.25);
-    position: relative; /* Для позиционирования кнопки удаления */
-    }
-    
-    .card-content {
-    word-break: break-word; /* Разрыв длинных слов */
-    }
-    
-    .delete-button {
+    position: relative; 
+}
+
+.card-content {
+    word-break: break-word; 
+}
+
+.delete-button {
     position: absolute;
     top: 5px;
     right: 5px;
@@ -50,20 +50,19 @@
     margin: 0;
     width: 20px;
     height: 20px;
-    }
-    
-    .delete-button img {
+}
+
+.delete-button img {
     width: 100%;
     height: 100%;
     object-fit: contain;
-    }
-    
-    
-    .add-card-container {
+}
+
+.add-card-container {
     margin-top: 10px;
-    }
-    
-    .add-card-button {
+}
+
+.add-card-button {
     background-color: #ffffff33;
     border: none;
     border-radius: 3px;
@@ -73,18 +72,18 @@
     text-align: left;
     width: 100%;
     transition: background-color 0.15s ease-in-out;
-    }
-    
-    .add-card-button:hover {
+}
+
+.add-card-button:hover {
     background-color: rgba(9, 30, 66, 0.08);
-    }
-    
-    .add-card-form {
+}
+
+.add-card-form {
     display: flex;
     flex-direction: column;
-    }
-    
-    .add-card-textarea {
+}
+
+.add-card-textarea {
     width: 100%;
     margin-bottom: 8px;
     padding: 8px;
@@ -92,15 +91,15 @@
     border-radius: 3px;
     resize: vertical;
     font-family: sans-serif;
-    }
-    
-    .add-card-buttons {
+}
+
+.add-card-buttons {
     display: flex;
     justify-content: flex-start;
     gap: 8px;
-    }
-    
-    .save-button {
+}
+
+.save-button {
     background-color: #5aac44;
     color: white;
     border: none;
@@ -108,13 +107,13 @@
     padding: 6px 12px;
     cursor: pointer;
     transition: background-color 0.15s ease-in-out;
-    }
-    
-    .save-button:hover {
+}
+
+.save-button:hover {
     background-color: #61bd4f;
-    }
-    
-    .cancel-button {
+}
+
+.cancel-button {
     background-color: #ccc;
     color: #5e6c84;
     border: none;
@@ -122,8 +121,8 @@
     padding: 6px 12px;
     cursor: pointer;
     transition: background-color 0.15s ease-in-out;
-    }
-    
-    .cancel-button:hover {
+}
+
+.cancel-button:hover {
     background-color: #aaa;
-    }
+}

@@ -6,20 +6,16 @@ import '../styles/main.css';
 
 function Board({ board, onAddCard, onDeleteCard, onDragEnd }) {
 
-return (
-<DragDropContext onDragEnd={onDragEnd}>
-<div className="board">
-{board.columns.map(column => (
-<Column
-key={column.id}
-column={column}
-onAddCard={onAddCard}
-onDeleteCard={onDeleteCard}
-/>
-))}
-</div>
-</DragDropContext>
-);
+    return (    
+        <DragDropContext onDragEnd={onDragEnd}>
+            <div className="board">
+                {board.columns.map(column => (
+                <Column key={column.id} column={column}
+                onAddCard={onAddCard} onDeleteCard={onDeleteCard}/>
+                ))}
+            </div>
+        </DragDropContext>
+    );
 }
 
 export default Board;
