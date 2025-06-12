@@ -1,35 +1,33 @@
 import React from 'react';
-import Card from './Card';
-import AddCard from './AddCard';
+import Card from './Card'; 
 import { Droppable } from 'react-beautiful-dnd';
 
-function Column({ column, onAddCard, onDeleteCard }) {
+const Column = ({ column, onAddCard, onDeleteCard }) => {
     return (
-        <div className="column">
-            <h2 className="column-title">{column.title}</h2>
-            <Droppable droppableId={column.id}>
-                {(provided) => (
-                    <div 
-                        ref={provided.innerRef} 
-                        {...provided.droppableProps} 
-                        className="droppable-area"
-                    >
-                        {column.cards.map((card, index) => (
-                            <Card
-                                key={card.id}
-                                card={card}
-                                columnId={column.id}
-                                onDeleteCard={onDeleteCard}
-                                index={index}
-                            />
-                        ))}
-                        {provided.placeholder}
-                        <AddCard columnId={column.id} onAddCard={onAddCard} />
-                    </div>
-                )}
-            </Droppable>
-        </div>
+        <Droppable droppableId={column.id}>
+            {(provided) => (
+                <div 
+                    className="column" 
+                    ref={provided.innerRef} 
+                    {...provided.droppableProps}
+                >
+                    <h2>{column.title}</h2>
+                    {column.cards.map((card, index) => (
+                        <Card 
+                            key={card.id} 
+                            card={card} 
+                            index={index} 
+                            onDeleteCard={onDeleteCard} 
+                        />
+                    ))}
+                    {provided.placeholder}
+                    <button onClick={() => onAddCard(column.id, prompt('Enter card text'))}>
+                        Add Card
+                    </button>
+                </div>
+            )}
+        </Droppable>
     );
-}
+};
 
 export default Column;

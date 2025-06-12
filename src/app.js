@@ -3,7 +3,7 @@ import Board from './components/Board';
 import { loadState, saveState } from './utils/localStorage';
 import './styles/reset.css';
 import './styles/main.css';
-import { DragDropContext } from 'react-beautiful-dnd'; 
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'; 
 
 const initialBoardState = {
     columns: [
