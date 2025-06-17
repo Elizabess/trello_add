@@ -12,7 +12,11 @@ const Card = ({ card, index, onDeleteCard }) => {
                     {...provided.dragHandleProps}
                 >
                     {card.text}
-                    <button onClick={() => onDeleteCard(card.id, card.columnId)}>Delete</button>
+                    <button 
+                        className="delete-button" 
+                        onClick={() => onDeleteCard(card.id, card.columnId)}>
+                        Delete
+                    </button>
                 </div>
             )}
         </Draggable>

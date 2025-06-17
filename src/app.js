@@ -3,7 +3,8 @@ import Board from './components/Board';
 import { loadState, saveState } from './utils/localStorage';
 import './styles/reset.css';
 import './styles/main.css';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'; 
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { v4 as uuidv4 } from 'uuid'; 
 
 const initialBoardState = {
     columns: [
@@ -29,7 +30,7 @@ function App() {
                 if (column.id === columnId) {
                     return {
                         ...column,
-                        cards: [...column.cards, { id: Math.random().toString(), text }],
+                        cards: [...column.cards, { id: uuidv4(), text }],
                     };
                 }
                 return column;
