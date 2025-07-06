@@ -57,19 +57,31 @@ function App() {
     const handleDragEnd = (result) => {
         const { source, destination } = result;
 
+        // Если нет назначения, выходим из функции
         if (!destination) {
+            return;
+        }
+
+        // Если карточка была перетащена в ту же позицию, выходим из функции
+        if (
+            source.droppableId === destination.droppableId &&
+            source.index === destination.index
+        ) {
             return;
         }
 
         setBoard(prevBoard => {
             const newColumns = [...prevBoard.columns];
+
+            // Находим исходную и целевую колонки
             const sourceColumn = newColumns.find(col => col.id === source.droppableId);
             const destinationColumn = newColumns.find(col => col.id === destination.droppableId);
 
-            const draggedCard = sourceColumn.cards.find(card => card.id === result.draggableId);
+            // Находим перетаскиваемую карточку
+            const draggedCard = sourceColumn.cards[source.index];
 
             // Удаляем карточку из исходной колонки
-            sourceColumn.cards = sourceColumn.cards.filter(card => card.id !== result.draggableId);
+            sourceColumn.cards.splice(source.index, 1);
 
             // Добавляем карточку в целевую колонку
             destinationColumn.cards.splice(destination.index, 0, draggedCard);
