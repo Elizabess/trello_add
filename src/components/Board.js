@@ -1,50 +1,65 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Column from './Column';
-import { DragDropContext } from 'react-beautiful-dnd';
 import '../styles/main.css';
 
 function Board({ board, onAddCard, onDeleteCard, setBoard }) {
-    const handleDragEnd = (result) => {
-        const { destination, source } = result;
+    const [draggedCard, setDraggedCard] = useState(null);
+    const [sourceColumnId, setSourceColumnId] = useState(null);
 
-        // Если нет назначения, выходим из функции
-        if (!destination) return;
+    const handleDragStart = (cardId, columnId) => {
+        setDraggedCard(cardId);
+        setSourceColumnId(columnId);
+        // Сохраняем информацию о переносимой карточке
+        event.dataTransfer.setData('text/plain', cardId);
+        event.dataTransfer.setData('sourceColumnId', columnId);
+    };
 
-        // Если карточка была перетащена в ту же позицию, выходим из функции
-        if (destination.droppableId === source.droppableId && destination.index === source.index) {
-            return;
-        }
+    const handleDragOver = (event) => {
+        event.preventDefault(); // Разрешаем сброс карточки
+    };
 
-        // Создаем новую копию колонок
+    const handleDrop = (event, targetColumnId) => {
+        event.preventDefault();
+        if (!draggedCard || !sourceColumnId) return;
+
         const newColumns = [...board.columns];
 
         // Находим исходную и целевую колонки
-        const sourceColumn = newColumns.find(col => col.id === source.droppableId);
-        const destColumn = newColumns.find(col => col.id === destination.droppableId);
+        const sourceColumn = newColumns.find(col => col.id === sourceColumnId);
+        const destColumn = newColumns.find(col => col.id === targetColumnId);
 
         // Удаляем карточку из исходной колонки
-        const [movedCard] = sourceColumn.cards.splice(source.index, 1);
+        const [movedCard] = sourceColumn.cards.filter(card => card.id === draggedCard);
+        sourceColumn.cards = sourceColumn.cards.filter(card => card.id !== draggedCard);
 
         // Добавляем карточку в целевую колонку
-        destColumn.cards.splice(destination.index, 0, movedCard);
+        destColumn.cards.push(movedCard);
 
         // Обновляем состояние доски
         setBoard({ ...board, columns: newColumns });
+
+        // Сбрасываем состояние перетаскивания
+        setDraggedCard(null);
+        setSourceColumnId(null);
     };
 
     return (
-        <DragDropContext onDragEnd={handleDragEnd}>
-            <div className="board">
-                {board.columns.map(column => (
+        <div className="board">
+            {board.columns.map(column => (
+                <div
+                    key={column.id} 
+                    onDragOver={handleDragOver} 
+                    onDrop={(event) => handleDrop(event, column.id)}
+                >
                     <Column 
-                        key={column.id} 
                         column={column}
                         onAddCard={onAddCard} 
                         onDeleteCard={onDeleteCard}
+                        onDragStart={handleDragStart}
                     />
-                ))}
-            </div>
-        </DragDropContext>
+                </div>
+            ))}
+        </div>
     );
 }
 
