@@ -1,24 +1,36 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import Card from './Card';
 
 const Column = ({ column, onAddCard, onDeleteCard, onDropCard }) => {
-    const handleDragOver = (event) => {
+    const handleDragOver = useCallback((event) => {
         event.preventDefault(); // Разрешаем сброс карточки
-    };
+    }, []);
 
-    const handleDrop = (event) => {
+    const handleDrop = useCallback((event) => {
         event.preventDefault(); // Предотвращаем действие по умолчанию
         const cardId = event.dataTransfer.getData('text/plain');
         const sourceColumnId = event.dataTransfer.getData('sourceColumnId');
-        onDropCard(cardId, sourceColumnId, column.id); // Перемещаем карточку
-    };
 
-    const handleDragEnter = (event) => {
+        if (cardId && sourceColumnId) {
+            onDropCard(cardId, sourceColumnId, column.id); // Перемещаем карточку
+        }
+    }, [column.id, onDropCard]);
+
+    const handleDragEnter = useCallback((event) => {
         event.currentTarget.classList.add('drag-over'); // Подсвечиваем колонку
-    };
+    }, []);
 
-    const handleDragLeave = (event) => {
+    const handleDragLeave = useCallback((event) => {
         event.currentTarget.classList.remove('drag-over'); // Убираем подсветку
+    }, []);
+
+    const handleAddCard = () => {
+        const cardText = prompt('Enter card text');
+        if (cardText && cardText.trim()) {
+            onAddCard(column.id, cardText.trim());
+        } else {
+            alert('Card text cannot be empty!'); // Уведомление пользователя
+        }
     };
 
     return (
@@ -45,12 +57,7 @@ const Column = ({ column, onAddCard, onDeleteCard, onDropCard }) => {
                     />
                 </div>
             ))}
-            <button onClick={() => {
-                const cardText = prompt('Enter card text');
-                if (cardText) {
-                    onAddCard(column.id, cardText);
-                }
-            }}>
+            <button onClick={handleAddCard}>
                 Add Card
             </button>
         </div>
@@ -58,3 +65,4 @@ const Column = ({ column, onAddCard, onDeleteCard, onDropCard }) => {
 };
 
 export default Column;
+

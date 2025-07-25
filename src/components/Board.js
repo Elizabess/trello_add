@@ -6,39 +6,47 @@ function Board({ board, onAddCard, onDeleteCard, setBoard }) {
     const [draggedCard, setDraggedCard] = useState(null);
     const [sourceColumnId, setSourceColumnId] = useState(null);
 
-    const handleDragStart = (cardId, columnId) => {
+    const handleDragStart = (event, cardId, columnId) => {
         setDraggedCard(cardId);
         setSourceColumnId(columnId);
-        // Сохраняем информацию о переносимой карточке
         event.dataTransfer.setData('text/plain', cardId);
         event.dataTransfer.setData('sourceColumnId', columnId);
     };
 
     const handleDragOver = (event) => {
-        event.preventDefault(); // Разрешаем сброс карточки
+        event.preventDefault();
     };
 
     const handleDrop = (event, targetColumnId) => {
         event.preventDefault();
         if (!draggedCard || !sourceColumnId) return;
 
-        const newColumns = [...board.columns];
+        setBoard(prevBoard => {
+            const newColumns = prevBoard.columns.map(column => {
+                if (column.id === sourceColumnId) {
+                    return {
+                        ...column,
+                        cards: column.cards.filter(card => card.id !== draggedCard),
+                    };
+                }
+                if (column.id === targetColumnId) {
+                    const movedCard = prevBoard.columns
+                        .find(col => col.id === sourceColumnId)
+                        ?.cards.find(card => card.id === draggedCard);
 
-        // Находим исходную и целевую колонки
-        const sourceColumn = newColumns.find(col => col.id === sourceColumnId);
-        const destColumn = newColumns.find(col => col.id === targetColumnId);
+                    if (!movedCard) return column; // Если карточка не найдена
 
-        // Удаляем карточку из исходной колонки
-        const [movedCard] = sourceColumn.cards.filter(card => card.id === draggedCard);
-        sourceColumn.cards = sourceColumn.cards.filter(card => card.id !== draggedCard);
+                    return {
+                        ...column,
+                        cards: [...column.cards, movedCard],
+                    };
+                }
+                return column;
+            });
 
-        // Добавляем карточку в целевую колонку
-        destColumn.cards.push(movedCard);
+            return { ...prevBoard, columns: newColumns };
+        });
 
-        // Обновляем состояние доски
-        setBoard({ ...board, columns: newColumns });
-
-        // Сбрасываем состояние перетаскивания
         setDraggedCard(null);
         setSourceColumnId(null);
     };
@@ -55,7 +63,7 @@ function Board({ board, onAddCard, onDeleteCard, setBoard }) {
                         column={column}
                         onAddCard={onAddCard} 
                         onDeleteCard={onDeleteCard}
-                        onDragStart={handleDragStart}
+                        onDragStart={(event, cardId) => handleDragStart(event, cardId, column.id)}
                     />
                 </div>
             ))}
