@@ -127,4 +127,16 @@
     background-color: #aaa;
 }
 
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+   
+.add-card-button:focus,
+.save-button:focus,
+.cancel-button:focus,
+.delete-button:focus {
+    outline: 2px solid #5aac44; 
+    outline-offset: 2px;
+}
+   
 

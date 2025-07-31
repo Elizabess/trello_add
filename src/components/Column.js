@@ -1,68 +1,65 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import Card from './Card';
 
-const Column = ({ column, onAddCard, onDeleteCard, onDropCard }) => {
-    const handleDragOver = useCallback((event) => {
-        event.preventDefault(); // Разрешаем сброс карточки
+const Column = ({ column, onAddCard, onDeleteCard }) => {
+    const handleAddCard = () => {
+        const text = prompt('Введите текст карточки:');
+        if (text) {
+            onAddCard(column.id, text);
+        }
+    };
+
+    const handleDragStateChange = useCallback((event, isEntering) => {
+        if (isEntering) {
+            event.currentTarget.classList.add('drag-over');
+        } else {
+            event.currentTarget.classList.remove('drag-over');
+        }
     }, []);
 
     const handleDrop = useCallback((event) => {
-        event.preventDefault(); // Предотвращаем действие по умолчанию
+        event.preventDefault();
         const cardId = event.dataTransfer.getData('text/plain');
         const sourceColumnId = event.dataTransfer.getData('sourceColumnId');
 
-        if (cardId && sourceColumnId) {
-            onDropCard(cardId, sourceColumnId, column.id); // Перемещаем карточку
+        if (cardId && sourceColumnId && sourceColumnId !== column.id) {
+            // moveCard(sourceColumnId, column.id, cardId);
         }
-    }, [column.id, onDropCard]);
+    }, [column.id]);
 
-    const handleDragEnter = useCallback((event) => {
-        event.currentTarget.classList.add('drag-over'); // Подсвечиваем колонку
-    }, []);
-
-    const handleDragLeave = useCallback((event) => {
-        event.currentTarget.classList.remove('drag-over'); // Убираем подсветку
-    }, []);
-
-    const handleAddCard = () => {
-        const cardText = prompt('Enter card text');
-        if (cardText && cardText.trim()) {
-            onAddCard(column.id, cardText.trim());
-        } else {
-            alert('Card text cannot be empty!'); // Уведомление пользователя
-        }
-    };
+    const renderedCards = useMemo(() => (
+        column.cards.map((card) => (
+            <div 
+                key={String(card.id)} 
+                draggable 
+                onDragStart={(event) => {
+                    event.dataTransfer.setData('text/plain', String(card.id));
+                    event.dataTransfer.setData('sourceColumnId', String(column.id));
+                }}
+            >
+                <Card 
+                    card={{ ...card, columnId: column.id }} 
+                    onDeleteCard={onDeleteCard} 
+                />
+            </div>
+        ))
+    ), [column.cards, column.id, onDeleteCard]);
 
     return (
         <div 
             className="column" 
-            onDragOver={handleDragOver} 
-            onDrop={handleDrop}
-            onDragEnter={handleDragEnter}
-            onDragLeave={handleDragLeave}
+            onDragOver={(event) => event.preventDefault()} 
+            onDrop={handleDrop} 
+            onDragEnter={(event) => handleDragStateChange(event, true)}
+            onDragLeave={(event) => handleDragStateChange(event, false)}
         >
             <h2>{column.title}</h2>
-            {column.cards.map((card) => (
-                <div 
-                    key={String(card.id)} 
-                    draggable 
-                    onDragStart={(event) => {
-                        event.dataTransfer.setData('text/plain', String(card.id));
-                        event.dataTransfer.setData('sourceColumnId', String(column.id));
-                    }}
-                >
-                    <Card 
-                        card={{ ...card, columnId: column.id }} 
-                        onDeleteCard={onDeleteCard} 
-                    />
-                </div>
-            ))}
-            <button onClick={handleAddCard}>
-                Add Card
-            </button>
+            <button onClick={handleAddCard}>Добавить карточку</button>
+            <div className="cards">
+                {renderedCards}
+            </div>
         </div>
     );
 };
 
 export default Column;
-

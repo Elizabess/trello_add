@@ -11,6 +11,7 @@ function Board({ board, onAddCard, onDeleteCard, setBoard }) {
         setSourceColumnId(columnId);
         event.dataTransfer.setData('text/plain', cardId);
         event.dataTransfer.setData('sourceColumnId', columnId);
+        console.log("Dragging card $`{cardId}` from column $`{columnId}`");
     };
 
     const handleDragOver = (event) => {
@@ -21,20 +22,19 @@ function Board({ board, onAddCard, onDeleteCard, setBoard }) {
         event.preventDefault();
         if (!draggedCard || !sourceColumnId) return;
 
+        console.log("Dropping card $`{draggedCard}` into column $`{targetColumnId}` from column ${sourceColumnId}");
+
         setBoard(prevBoard => {
             const newColumns = prevBoard.columns.map(column => {
                 if (column.id === sourceColumnId) {
-                    return {
-                        ...column,
-                        cards: column.cards.filter(card => card.id !== draggedCard),
-                    };
+                    return column; 
                 }
                 if (column.id === targetColumnId) {
                     const movedCard = prevBoard.columns
                         .find(col => col.id === sourceColumnId)
                         ?.cards.find(card => card.id === draggedCard);
 
-                    if (!movedCard) return column; // Если карточка не найдена
+                    if (!movedCard) return column; 
 
                     return {
                         ...column,
