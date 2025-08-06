@@ -23,6 +23,7 @@ const Column = ({ column, onAddCard, onDeleteCard }) => {
         const sourceColumnId = event.dataTransfer.getData('sourceColumnId');
 
         if (cardId && sourceColumnId && sourceColumnId !== column.id) {
+            // Здесь должна быть логика перемещения карточки
             // moveCard(sourceColumnId, column.id, cardId);
         }
     }, [column.id]);

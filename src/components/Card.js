@@ -1,17 +1,8 @@
 import React from 'react';
 
-const Card = ({ card, index, onDeleteCard, onDragStart }) => {
-    const handleDragStart = (e) => {
-        // Убедитесь, что передаете card.id и index
-        onDragStart(e, card.id, index);
-    };
-
+const Card = ({ card, index, onDeleteCard }) => {
     return (
-        <div 
-            className="card" 
-            draggable 
-            onDragStart={handleDragStart}
-        >
+        <div className="card">
             {card.text}
             <button 
                 className="delete-button" 
