@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo } from 'react';
 import Card from './Card';
 
-const Column = ({ column, onAddCard, onDeleteCard }) => {
+const Column = ({ column, onAddCard, onDeleteCard, moveCard }) => {
     const handleAddCard = () => {
         const text = prompt('Введите текст карточки:');
         if (text) {
@@ -22,11 +22,10 @@ const Column = ({ column, onAddCard, onDeleteCard }) => {
         const cardId = event.dataTransfer.getData('text/plain');
         const sourceColumnId = event.dataTransfer.getData('sourceColumnId');
 
-        if (cardId && sourceColumnId && sourceColumnId !== column.id) {
-            // Здесь должна быть логика перемещения карточки
-            // moveCard(sourceColumnId, column.id, cardId);
+        if (cardId && sourceColumnId) {
+            moveCard(sourceColumnId, column.id, cardId);
         }
-    }, [column.id]);
+    }, [column.id, moveCard]);
 
     const renderedCards = useMemo(() => (
         column.cards.map((card) => (
