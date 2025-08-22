@@ -6,69 +6,62 @@ function Board({ board, onAddCard, onDeleteCard, setBoard }) {
     const [draggedCard, setDraggedCard] = useState(null);
     const [sourceColumnId, setSourceColumnId] = useState(null);
 
-    const handleDragStart = (event, cardId, columnId) => {
-        setDraggedCard(cardId);
-        setSourceColumnId(columnId);
-        event.dataTransfer.setData('text/plain', cardId);
-        event.dataTransfer.setData('sourceColumnId', columnId);
-        console.log("Dragging card $`{cardId}` from column $`{columnId}`");
-    };
+    const moveCard = (sourceColumnId, targetColumnId, cardId) => {
+    if (sourceColumnId === targetColumnId) {
+        return;
+    }
 
-    const handleDragOver = (event) => {
-        event.preventDefault();
-    };
-
-    const handleDrop = (event, targetColumnId) => {
-        event.preventDefault();
-        if (!draggedCard || !sourceColumnId) return;
-
-        console.log("Dropping card $`{draggedCard}` into column $`{targetColumnId}` from column ${sourceColumnId}");
-
-        setBoard(prevBoard => {
-            const newColumns = prevBoard.columns.map(column => {
-                if (column.id === sourceColumnId) {
-                    return column; 
-                }
-                if (column.id === targetColumnId) {
-                    const movedCard = prevBoard.columns
-                        .find(col => col.id === sourceColumnId)
-                        ?.cards.find(card => card.id === draggedCard);
-
-                    if (!movedCard) return column; 
-
+    setBoard(prevBoard => {
+        let movedCard;
+        const newColumns = prevBoard.columns.map(column => {
+            if (column.id === sourceColumnId) {
+                const cardIndex = column.cards.findIndex(card => card.id === cardId);
+                if (cardIndex > -1) {
+                    movedCard = column.cards[cardIndex];
                     return {
                         ...column,
-                        cards: [...column.cards, movedCard],
+                        cards: column.cards.filter(card => card.id !== cardId)
                     };
                 }
-                return column;
-            });
-
-            return { ...prevBoard, columns: newColumns };
+            }
+            return column;
         });
+        
+        if (movedCard) {
+            return {
+                ...prevBoard,
+                columns: newColumns.map(column => {
+                    if (column.id === targetColumnId) {
+                        return {
+                            ...column,
+                            cards: [...column.cards, movedCard]
+                        };
+                    }
+                    return column;
+                })
+            };
+        }
 
-        setDraggedCard(null);
-        setSourceColumnId(null);
-    };
+        return prevBoard;
+    });
+};
 
+    
     return (
         <div className="board">
             {board.columns.map(column => (
-                <div
-                    key={column.id} 
-                    onDragOver={handleDragOver} 
-                    onDrop={(event) => handleDrop(event, column.id)}
-                >
+                <div key={column.id}>
                     <Column 
                         column={column}
                         onAddCard={onAddCard} 
                         onDeleteCard={onDeleteCard}
-                        onDragStart={(event, cardId) => handleDragStart(event, cardId, column.id)}
+                        moveCard={moveCard} 
                     />
                 </div>
             ))}
         </div>
     );
+
 }
 
 export default Board;

@@ -58,41 +58,48 @@ function App() {
     };
 
     const handleDrop = (e, columnId) => {
-        const cardId = e.dataTransfer.getData("text/plain");
-        
-        if (!cardId) return;
+    const cardId = e.dataTransfer.getData("text/plain");
+    
+    if (!cardId) return;
 
-        setBoard(prevBoard => {
-            const newColumns = prevBoard.columns.map(column => {
-                if (column.id === columnId) {
-                    const draggedCard = prevBoard.columns
-                        .flatMap(col => col.cards)
-                        .find(card => card.id === cardId);
+    setBoard(prevBoard => {
+        const newColumns = prevBoard.columns.map(column => {
+            if (column.id === columnId) {
+                const draggedCard = prevBoard.columns
+                    .flatMap(col => col.cards)
+                    .find(card => card.id === cardId);
 
-                    // Удаляем карточку из старой колонки
-                    const sourceColumn = prevBoard.columns.find(col => col.cards.find(card => card.id === cardId));
-                    sourceColumn.cards = sourceColumn.cards.filter(card => card.id !== cardId);
+                const sourceColumn = prevBoard.columns.find(col => 
+                    col.cards.some(card => card.id === cardId)
+                );
 
-                    // Добавляем карточку в новую колонку
-                    return {
-                        ...column,
-                        cards: [...column.cards, draggedCard],
-                    };
-                }
-                return column;
-            });
-            return { ...prevBoard, columns: newColumns };
+                const newSourceCards = sourceColumn.cards.filter(card => card.id !== cardId);
+                const newTargetCards = [...column.cards, draggedCard];
+
+                return {
+                    ...column,
+                    cards: newTargetCards,
+                };
+            }
+            if (column.id === sourceColumn.id) {
+                return {
+                    ...column,
+                    cards: newSourceCards,
+                };
+            }
+            return column;
         });
-    };
+        return { ...prevBoard, columns: newColumns };
+    });
+};
 
     return (
         <div className="app-container">
             <Board
                 board={board}
+                setBoard={setBoard}
                 onAddCard={handleAddCard}
                 onDeleteCard={handleDeleteCard}
-                onDragStart={handleDragStart}
-                onDrop={handleDrop}
             />
         </div>
     );
